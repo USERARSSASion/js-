@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单向链表结构的封装</title>
+  <style type="text/css">
+    i {
+      color: darkgoldenrod;
+    }
+  </style>
+</head>
+<body>
+<div>
+  <p>
+    链表的每个元素由一个存储<i>元素自身的节点</i>和一个<i>指向下一个元素的引用</i>(有些语言成为指针或者连接)组成。
+  </p>
+  <div>
+    <p>
+      优点:<br/>
+      内存空间不是必须连续的，可以充分使用计算机的内存，实现灵活的内存动态管理<br/>
+      不必在创建的时候就确定大小，并且可以无限延伸下去。<br/>
+      插入和删除数据的时间复杂度可以达到O(1),效率很高
+    </p>
+  </div>
+  <div>
+    <p>
+      缺点:<br/>
+      链表访问任何一个位置的元素时，都需要从头开始访问(无法跳过第一个元素访问任何一个元素)<br/>
+      无法通过下标直接访问元素，需要从头一个个访问，知道找到对应的元素<br/>
+    </p>
+  </div>
+</div>
+
+<script>
+  // 封装链表类
+  function LinkedList() {
+    // 内部类：节点类
+    function Node(data) {
+      this.data = data;
+      this.next = null;
+    }
+
+    // 属性
+    this.head = null;
+    this.length = 0;
+
+    // 1. 追加方法
+    LinkedList.prototype.append = function (data) {
+      // 创建新节点
+      var newNode = new Node(data);
+      // 判断是否添加的是第一个节点
+      if (this.length === 0) {
+        this.head = newNode;
+      } else {
+        var current = this.head;
+        while (current.next) {
+          current = current.next;
+        }
+
+        current.next = newNode;
+      }
+
+      this.length += 1
+    }
+
+    // 2. toString 方法
+    LinkedList.prototype.toString = function () {
+      // 定义变量
+      var current = this.head;
+      var listString = '';
+      // 循环获取一个个节点
+      while (current) {
+        listString += current.data + ' '
+        current = current.next;
+      }
+      return listString
+    }
+
+    // 3. insert 方法
+    LinkedList.prototype.insert = function (position, data) {
+      // 1. 对 position 进行越界判断
+      if (position < 0 || position > this.length) return false 
+      
+      // 2. 根据 data 创建 newNode
+    }
+  }
+
+  // 测试
+  var list = new LinkedList();
+  list.append('abc');
+  list.append('bbc');
+  list.append('cbc');
+  alert(list);
+</script>
+</body>
+</html>

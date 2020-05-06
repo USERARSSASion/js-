@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>队列的封装</title>
+</head>
+<body>
+<div>
+  受限的线性表：队列
+  先进先出
+  只允许在表的前端进行删除操作，后端进行插入操作
+</div>
+<script>
+  // 队列的封装
+  function Queue() {
+    // 属性
+    this.items = [];
+
+    // 方法
+    // 1. 将元素加入队列中 
+    Queue.prototype.enqueue = function (element) {
+      this.items.push(element)
+    }
+    // 2. 从队列中删除前端元素
+    Queue.prototype.dequeue = function () {
+      return this.items.shift()
+    }
+    // 3. 查看前端元素
+    Queue.prototype.front = function () {
+      return this.items[0]
+    }
+    // 4. 查看队列是否为空
+    Queue.prototype.isEmpty = function () {
+      return this.items.length === 0
+    }
+    // 5. 查看队列中元素的个数
+    Queue.prototype.size = function () {
+      return this.items.length
+    }
+    // 6. toString 方法
+    Queue.prototype.toString = function () {
+      return this.items.join(' ')
+    }
+  }
+
+  // 使用队列
+  var queue = new Queue()
+  queue.enqueue('a')
+  queue.enqueue('b')
+  queue.enqueue('c')
+  queue.enqueue('z')
+  console.log(queue)
+  queue.dequeue()
+  queue.dequeue()
+  console.log(queue)
+  console.log(queue.front())
+  console.log(queue.isEmpty())
+  console.log(queue.size())
+  console.log(queue.toString())
+
+  // 击鼓传花
+  function passGame(nameList, num) {
+    // 创建一个队列
+    var queue = new Queue();
+    // 将所有人加入队列中
+    for (let i = 0; i < nameList.length; i++) {
+      const element = nameList[i];
+      queue.enqueue(element);
+    }
+    
+    while (queue.size() > 1) {
+      // 开始数数字，不是 num 加入队列末尾
+      for (let i = 0; i < num - 1; i++) {
+        queue.enqueue(queue.dequeue());
+      }
+      // num 对应直接删除掉
+      queue.dequeue();
+    }
+
+    // 获取剩下的那个人
+    console.log(queue.size())
+    console.log(queue.toString())
+    return queue.toString();
+  }
+  passGame(['明', '花', '刚', '弱', '强', '雷'], 5)
+</script>
+</body>
+</html>
