@@ -77,7 +77,110 @@
     }
     // 5. insert 方法
     DoublyLinkedList.prototype.insert = function (position, data) {
+      // 1. 越界判断
+      if (position < 0 || position > this.length) return false;
+      // 2. 判断是起始/末尾元素插入
+      if (position === 0 || position === this.length) {
+        this.append(data);
+      } else {  // 中间元素插入
+        var current = this.head;
+        var index = 0;
+        while (index++ < position) {
+          current = current.next;          
+        }
+        var newNode = new Node(data);
+        newNode.next = current;
+        newNode.prev = current.prev;
+        current.prev.next = newNode;
+        current.prev = newNode;
+      }
+
+      this.length += 1;
+      return true;
+    }
+    // 6. get 方法
+    DoublyLinkedList.prototype.get = function (position) {
+      // 1. 越界判断
+      if (position < 0 || position >= this.length) return null;
+
+      // 简单优化 
+      // this.length / 2 > position 从头向后遍历
+      // this.length / 2 < position 从后向头遍历
+      var current = this.head;
+      var index = 0;
+
+      while (index ++ < position) {
+        current = current.next;
+      }
+      return current.data;
+    }
+    // 7. indexOf 方法
+    DoublyLinkedList.prototype.indexOf = function (data) {
+      // 1. 定义变量
+      var current = this.head;
+      var index = 0;
       
+      // 2. 遍历链表查找相同的数据
+      while (current) {
+        if (current.data === data) {
+          return index;
+        }
+        current = current.next;
+        index += 1;
+      }
+
+      return -1;
+    }
+    // 8. update 方法
+    DoublyLinkedList.prototype.update = function (position, newData) {
+      // 1. 越界判断
+      if (position < 0 || position >= this.length) return false;
+      // 2.寻找正确的节点
+      var current = this.head;
+      var index = 0;
+      while (index++ < this.length) {
+        current = current.next;
+      }
+      //3. 修改当前节点的 data
+      current.data = newData;
+    }
+    // 9. removeAt 方法
+    DoublyLinkedList.prototype.removeAt = function (position) {
+      // 1. 越界判断
+      if (position < 0 || position >= this.length) return null;
+      
+      var current = this.head;
+      if (this.length === 0) {
+        this.head = null;
+        this.prev = null;
+      } else {
+        if (position === 0) {
+          this.head.next.prev = null;
+          this.head = this.head.next;
+        } else if (position === this.length - 1) {
+          current = this.tail;
+          this.tail.prev.next = null;
+          this.tail = this.tail.prev;
+        } else {
+          var index = 0;
+
+          while (index++ < position) {
+            current = current.next;
+          }
+          current.prev.next = current.next;
+          current.next.prev = current.prev;
+        }
+      }
+
+      this.length -= 1;
+      return current.data;
+    }
+    // 10. remove 方法
+    DoublyLinkedList.prototype.remove = function (data) {
+      // 1. 根据 data 获取下标
+      var index = this.indexOf(data);
+      // 2. 根据 index 删除元素
+      return this.removeAt(index);
     }
   } 
 
@@ -85,8 +188,9 @@
   dl.append('aaa');
   dl.append('bbb');
   dl.append('ccc');
-  alert(dl.backwardString())
-  alert(dl.forwardString())
+  dl.insert(1, 'ddd');
+  
+  console.log(dl.removeAt(1))
 </script>
 </body>
 </html>
