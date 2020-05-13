@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>质数算法</title>
+</head>
+<body>
+<script>
+//    function isPrime(num) {
+//        for (var i = 2; i < num; i++) {
+//            if (num % i == 0) {
+//                return false
+//            }
+//        }
+//        return true
+//    }
+
+    /*
+        高效质数算法
+        一个数如果可以进行因数分解，那么分解时得到的两个数一定是一个小于等于 sqrt(n) 一个大于等于 sqrt(n)
+        eg: 16 分解 -> 2*8 小于 sqrt(16) 也就是 4,8 大于4， 而 4*4都是等于 sqrt(n)
+    */
+    function isPrime(num) {
+        // 1.获取平方根
+        var temp = parseInt(Math.sqrt(num))
+
+        // 2.循环判断
+        for (var i = 2; i <= temp; i++) {
+            if (num % i == 0) {
+                return false
+            }
+        }
+        return true
+    }
+
+    // 测试
+    alert(isPrime(3)) // true
+    alert(isPrime(32)) // false
+    alert(isPrime(37)) // true
+
+    alert(5/2)
+</script>
+</body>
+</html>
