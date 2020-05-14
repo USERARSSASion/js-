@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二叉树</title>
+</head>
+<body>
+<div>
+  <p>如果树树中每个节点最多只能有两个子节点，这样的树就成为二叉树</p>
+  <img src="./twotree.png" alt="">
+  <h3>二叉树的几个比较重要的特性</h3>
+  <ol>
+    <li>一个二叉树第i层的最大节点数为：2^(i-1), i >= 1 </li>
+    <li>深度为 k  的二叉树最大节点总数为：2^k - 1, k >= 1 </li>
+    <li>对任何非空二叉树 T，若 n0 表示叶节点的个数、n2 是度为 2 的非叶节点个数，那么两者满足关系 n0 = n2 + 1</li>
+  </ol>
+  <img src="./gongshi.png" alt="">
+  <p>完美二叉树也称作满二叉树：每层节点都哦有2个子节点</p>
+  <p>完全二叉树：除二叉树最后一层外，其他各层的节点数都达到最大个数，且最后一层从左向右的叶节点连续存在，只缺右侧若干节点</p>
+  <p>完美二叉树是特殊的完全二叉树</p>
+  <h3>二叉搜索树(BST,Binary Search Tree)(二叉排序树或二叉查找树)</h3>
+  <p>二叉搜索树是一颗二叉树，可以为空</p>
+  <p>如果不为空，满足以下性质：</p>
+  <ol>
+    <li>非空左子树的所有键值小于其根节点的键值</li>
+    <li>非空右子树的所有键值大于其根节点的键值</li>
+    <li>左，右子树本身也都是二叉搜索树</li>
+  </ol>
+  <img src="./BST.png" alt="">
+  <h3>二叉搜索树特点</h3>
+  <ol>
+    <li>相对较小的值总是保存在左节点上，相对较大的值总是保存在右节点</li>
+    <li>查找效率很高，这也是二叉搜索树中搜索的来源</li>
+  </ol>
+  <p>模拟树的样子</p>
+  <img src="./mock.png" alt="">
+  <h3>遍历方式</h3>
+  <img src="./presearch.png" alt="">
+  <p>先序遍历</p>
+</div>
+
+<script>
+  // 二叉搜索树
+  function BinarySearchTree() {
+
+    function Node(key) {
+      this.key = key;
+      this.left = null;
+      this.right = null;
+    }
+    // 属性
+    this.root = null;
+
+    // 方法
+    BinarySearchTree.prototype.insert = function (key) {
+      // 1.根据 key 创建节点
+      var newNode = new Node(key);
+      // 2.判断根节点是否有值
+      if (this.root === null) {
+        this.root = newNode;
+      } else {
+        this.insertNode(this.root, newNode);
+      }
+    }
+
+    BinarySearchTree.prototype.insertNode = function (node, newNode) {
+      if (newNode.key < node.key) {  // 向左查找
+        if (node.left === null) {
+          node.left = newNode;
+        } else {
+          this.insertNode(node.left, newNode);
+        }
+      } else {  // 向右查找
+        if (node.right === null) {
+          node.right = newNode;
+        } else {
+          this.insertNode(node.right, newNode);
+        }
+      }
+    }
+  }
+
+  // 测试代码
+  const bst = new BinarySearchTree();
+  bst.insert(11);
+  bst.insert(7);
+  bst.insert(15);
+  bst.insert(5);
+  bst.insert(3);
+  bst.insert(9);
+  bst.insert(8);
+  bst.insert(10);
+  bst.insert(13);
+  bst.insert(12);
+  bst.insert(14);
+  bst.insert(20);
+  bst.insert(18);
+  bst.insert(25);
+  console.log(bst)
+</script>
+</body>
+</html>
