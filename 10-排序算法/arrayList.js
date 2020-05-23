@@ -40,4 +40,19 @@ function ArrayList() {
       this.swap(min, j);
     }
   }
+
+  ArrayList.prototype.insertionSort = function () {
+    var length = this.array.length;
+    
+    for (let i = 0; i < length; i++) {
+      var temp = this.array[i];
+      
+      var j = i;
+      while (this.array[j - 1] > temp && j > 0) {
+        this.array[j] = this.array[j - 1];
+        j--;
+      }
+      this.array[j] = temp;
+    }
+  }
 }
