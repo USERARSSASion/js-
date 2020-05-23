@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图的概念</title>
+</head>
+<body>
+<div>
+  <h2>图的特点</h2>
+  <p>一组边：通常用V(Vertex)表示顶点的集合</p>
+  <p>一组边:通常用E(Edge)表示边的集合</p>
+  <i>边是顶点和顶点之间的连线<br>边可以是有向的，也可以是无向的<br>A---B表示无向，A--->B表示有向</i>
+  <h2>图的术语</h2>
+  <ol>
+    <li>顶点：图中的一个节点</li>
+    <li>边：顶点和顶点之间的连线</li>
+    <li>相邻顶点：由一条边连接在一起的顶点成为相邻顶点</li>
+    <li>度：一个顶点的度是相邻顶点的数量</li>
+    <li><div>
+      <p>路径：顶点 v1,v2...,vn的一个连续序列</p>
+      <p>简单路径：简单路径要求不包含重复的顶点</p>
+      <p>回路：第一个顶点和最后一个顶点相同的路径成为回路</p>
+    </div></li>
+    <li>无向图：所有的边都没有方向</li>
+    <li>有向图：所有的边都有方向</li>
+    <li>无权图：边没有携带权重</li>
+    <li>带权图：边有一定的权重</li>
+  </ol>
+  <h3>临接矩阵</h3>
+  <img src="./ljjz.png" alt="">
+  <h3>邻接表</h3>
+  <img src="./ljb.png" alt="">
+  <h2>图的遍历</h2>
+  <p>图的遍历意味着需要将图中每个顶点访问一遍，并且不能有重复的访问</p>
+  <ol>
+    <li><div>
+      <p>广度优先搜索(Breadth-First Search，BFS)</p>
+      <p>基于队列，入队列的顶点先被搜索</p>
+      <p>先宽后深的访问顶点</p>
+      <img src="./BFS.png" alt="">
+    </div></li>
+    <li><div>
+      <p>深度优先搜索(Depth-First Search，DFS)</p>
+      <p>基于栈或使用递归，通过将顶点存入栈中，顶点是沿着路径被探索的，存在新的相邻顶点就是访问</p>
+      <img src="./DFS.png" alt="">
+    </div></li>
+  </ol>
+  <p>两种遍历算法都需要明确指定第一个被访问的顶点</p>
+  <p>为了记录是否被访问过，使用三种颜色来反应它们的状态</p>
+  <ol>
+    <li>白色：表示顶点还未被访问</li>
+    <li>灰色：表示顶点被访问但未被探索过</li>
+    <li>黑色：表示顶点被访问过切被完全探索过</li>
+  </ol>
+</div>
+
+<script src="./dict.js"></script>
+<script src="./queue.js"></script>
+<script>
+  // 图的封装
+  function Graph() {
+    // 属性
+    this.vertexes = []; // 顶点
+    this.edges = new Dictionary(); // 边
+
+    // 方法
+    // 1.添加顶点的方法
+    Graph.prototype.addVertex = function (v) {
+      this.vertexes.push(v);
+      this.edges.set(v, []);
+    }
+    // 2.添加边的方法
+    Graph.prototype.addEdge = function (v1, v2) {
+      this.edges.get(v1).push(v2);
+      this.edges.get(v2).push(v1);
+    }
+    // 3.toString 方法
+    Graph.prototype.toString = function () {
+      var resultString = '';
+
+      for (let i = 0; i < this.vertexes.length; i++) {
+        resultString += this.vertexes[i] + '->';
+        var vEdges = this.edges.get(this.vertexes[i]);
+        for (let j = 0; j < vEdges.length; j++) {
+          resultString += vEdges[j] + ' '          
+        }        
+        resultString += '\n';
+      }
+      return resultString;
+    }
+    // 初始化状态颜色
+    Graph.prototype.initializeColor = function () {
+      var colors = [];
+      for (let i = 0; i < this.vertexes.length; i++) {
+        // console.log(this.vertexes[i])
+        colors[this.vertexes[i]] = 'white';
+      }
+      return colors;
+    }
+    // 广度优先搜索
+    Graph.prototype.bfs = function (initV, handler) {
+      // 初始化颜色
+      var colors = this.initializeColor();
+      // 创建队列
+      var queue = new Queue();
+      // 将顶点加入队列中去
+      queue.enqueue(initV);
+      // 循环从队列中取出元素
+      while (!queue.isEmpty()) {
+        // 从队列中取出一个顶点
+        var v = queue.dequeue();
+        // 获取和顶点相连接的另外一个顶点
+        var vList = this.edges.get(v);
+        // 将v的颜色设置成灰色
+        colors[v] = 'gray';
+        // 遍历所有的顶点，并且加入队列中
+        for (let i = 0; i < vList.length; i++) {
+          var e = vList[i];
+          if (colors[e] === 'white') {
+            colors[e] = 'gray';
+            queue.enqueue(e);
+          }          
+        }
+        // 访问顶点
+        handler(v);
+        // 将顶点设置成黑色
+        colors[v] = 'black';
+      }
+    }
+    // 深度优先搜索
+    Graph.prototype.dfs = function (initV, handler) {
+      var colors = this.initializeColor();
+      this.dfsVisit(initV, colors, handler)
+    }
+    Graph.prototype.dfsVisit = function (v, colors, handler) {
+      // 将颜色设置成灰色
+      colors[v] = 'gray';
+
+      // 处理 v 顶点
+      handler(v);
+
+      // 访问 v 相连的顶点
+      var vList = this.edges.get(v);
+      for (let i = 0; i < vList.length; i++) {
+        var e = vList[i];
+        if (colors[e] === 'white') {
+          this.dfsVisit(e, colors, handler)
+        }        
+      }
+
+      // 将 v 设置成黑色
+      colors[v] = 'black';
+    }
+  } 
+
+  var g = new Graph();
+
+  var myVertexes = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+
+  for (let i = 0; i < myVertexes.length; i++) {
+    g.addVertex(myVertexes[i]);
+  }
+  g.addEdge("A", "B");
+  g.addEdge("A", "C");
+  g.addEdge("A", "D");
+  g.addEdge("C", "D");
+  g.addEdge("C", "G");
+  g.addEdge("D", "G");
+  g.addEdge("D", "H");
+  g.addEdge("B", "E");
+  g.addEdge("B", "F");
+  g.addEdge("E", "I");
+  console.log(g);
+  console.log(g.toString());
+  var aaa = g.initializeColor();
+  console.log(Object.prototype.toString.call(aaa))
+  var result = '';
+  g.bfs(g.vertexes[0], function (v) {
+    result += v + ' ';
+  })
+  console.log(result)
+  result = '';
+  g.dfs(g.vertexes[0], function (v) {
+    result += v + ' ';
+  })
+  console.log(result)
+  // Math.floor(Math.random() * (max - min + 1)) + min;
+  // function valueType(value){
+  //   return Object.prototype.toString.call(value)
+  // }
+</script>
+</body>
+</html>
