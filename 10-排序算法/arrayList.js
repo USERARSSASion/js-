@@ -55,4 +55,24 @@ function ArrayList() {
       this.array[j] = temp;
     }
   }
+
+  ArrayList.prototype.shellSort = function () {
+    var length = this.array.length;
+    
+    var gap = Math.floor(length / 2);
+
+    while(gap >= 1) {
+      for (let i = gap; i < length; i++) {
+        var temp = this.array[i];
+        var j = i;
+        while(this.array[j - gap] > temp && j > gap - 1) {
+          this.array[j] = this.array[j - gap];
+          j -= gap;
+        }
+        this.array[j] = temp;
+      }
+
+      gap = Math.floor(gap / 2);
+    }
+  }
 }
